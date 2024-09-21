@@ -17,22 +17,17 @@ class UserApiController extends Controller
     public function index()
     {
         $all_user = User::all();
+        $msg = 'Get All User Success.';
 
-        return response()->json([
-            'status' => true,
-            'message' => 'Get All Data Success.',
-            'data' => UserResource::collection($all_user)
-        ]);
+        return $this->sendResponse($all_user, $msg);
     }
 
     // Get User by Id
     public function show(User $user)
     {
-        return response()->json([
-            'status' => true,
-            'message' => 'Get Data Success.',
-            'data' => new UserResource($user)
-        ]);
+        $msg = 'Get Data Success.';
+
+        return $this->sendResponse(new UserResource($user), $msg);
     }
 
     // Store User
@@ -55,11 +50,9 @@ class UserApiController extends Controller
             // 'photo' => $img_name
         ]);
 
-        return response()->json([
-            'status' => true,
-            'message' => 'Add User Success.',
-            'data' => new UserResource($user)
-        ]);
+        $msg = 'Add User Success.';
+
+        return $this->sendResponse(new UserResource($user), $msg);
     }
 
     // Update User
@@ -93,11 +86,9 @@ class UserApiController extends Controller
         // $user->address = $request->address;
         $user->update();
 
-        return response()->json([
-            'status' => true,
-            'message' => 'Update User Success.',
-            'data' => new UserResource($user)
-        ]);
+        $msg = 'Update User Success.';
+
+        return $this->sendResponse(new UserResource($user), $msg);
     }
 
     // Delete User
@@ -108,7 +99,9 @@ class UserApiController extends Controller
 
             return response()->noContent();
         } catch (\Exception $e) {
-            return $e->getMessage();
+            $msg = $e->getMessage();
+
+            return $this->sendError('Error Delete: ', $e->getMessage(), 500);
         }
     }
 }

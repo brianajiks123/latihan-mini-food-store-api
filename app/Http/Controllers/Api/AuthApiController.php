@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginUserRequest;
 use App\Http\Requests\RegisterUserRequest;
+use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -29,20 +30,14 @@ class AuthApiController extends Controller
             $data = [
                 'access_token' => $token,
                 'token_type' => 'Bearer',
-                'user' => $user
+                'user' => new UserResource($user)
             ];
 
-            return response()->json([
-                'status' => true,
-                'message' => 'Create Token Success.',
-                'data' => $data
-            ]);
+            $msg = 'Create Token Success.';
+
+            return $this->sendResponse($data, $msg);
         } catch (\Exception $e) {
-            return response()->json([
-                'status' => false,
-                'message' => 'Create Token Failed. Message: ' . $e->getMessage(),
-                'data' => null
-            ]);
+            return $this->sendError('Create Token Failed', $e->getMessage());
         }
     }
 
@@ -55,11 +50,7 @@ class AuthApiController extends Controller
             $creds = request(['email', 'password']);
 
             if (!Auth::attempt($creds)) {
-                return response()->json([
-                    'status' => false,
-                    'message' => 'Authentication Failed!',
-                    'data' => null
-                ]);
+                return $this->sendError('Unauthorized', 'Authentication Failed!', 500);
             }
 
             $user = User::where('email', $validated_data['email'])->first();
@@ -73,20 +64,14 @@ class AuthApiController extends Controller
             $data = [
                 'access_token' => $token,
                 'token_type' => 'Bearer',
-                'user' => $user
+                'user' => new UserResource($user)
             ];
 
-            return response()->json([
-                'status' => true,
-                'message' => 'Authenticated.',
-                'data' => $data
-            ]);
+            $msg = 'Authenticated.';
+
+            return $this->sendResponse($data, $msg);
         } catch (\Exception $e) {
-            return response()->json([
-                'status' => false,
-                'message' => 'Authentication Failed!',
-                'data' => null
-            ]);
+            return $this->sendError('Authentication Failed!', $e->getMessage());
         }
     }
 
