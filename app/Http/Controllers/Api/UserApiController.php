@@ -19,8 +19,18 @@ class UserApiController extends Controller
 
         return response()->json([
             'status' => true,
-            'message' => 'Get Data Success.',
+            'message' => 'Get All Data Success.',
             'data' => $all_user
+        ]);
+    }
+
+    // Get User by Id
+    public function show(User $user)
+    {
+        return response()->json([
+            'status' => true,
+            'message' => 'Get Data Success.',
+            'data' => $user
         ]);
     }
 
@@ -87,5 +97,17 @@ class UserApiController extends Controller
             'message' => 'Update User Success.',
             'data' => $user
         ]);
+    }
+
+    // Delete User
+    public function destroy(User $user)
+    {
+        try {
+            $user->deleteOrFail();
+
+            return response()->noContent();
+        } catch (\Exception $e) {
+            return $e->getMessage();
+        }
     }
 }
