@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
+use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
@@ -20,7 +21,7 @@ class UserApiController extends Controller
         return response()->json([
             'status' => true,
             'message' => 'Get All Data Success.',
-            'data' => $all_user
+            'data' => UserResource::collection($all_user)
         ]);
     }
 
@@ -30,7 +31,7 @@ class UserApiController extends Controller
         return response()->json([
             'status' => true,
             'message' => 'Get Data Success.',
-            'data' => $user
+            'data' => new UserResource($user)
         ]);
     }
 
@@ -57,7 +58,7 @@ class UserApiController extends Controller
         return response()->json([
             'status' => true,
             'message' => 'Add User Success.',
-            'data' => $user
+            'data' => new UserResource($user)
         ]);
     }
 
@@ -95,7 +96,7 @@ class UserApiController extends Controller
         return response()->json([
             'status' => true,
             'message' => 'Update User Success.',
-            'data' => $user
+            'data' => new UserResource($user)
         ]);
     }
 
