@@ -16,10 +16,10 @@ class UserApiController extends Controller
     // Get All User
     public function index()
     {
-        $all_user = User::all();
+        $all_user = User::paginate(3);
         $msg = 'Get All User Success.';
 
-        return $this->sendResponse($all_user, $msg);
+        return $this->sendResponse(UserResource::collection($all_user)->resource, $msg);
     }
 
     // Get User by Id
